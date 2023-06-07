@@ -9,7 +9,7 @@ public class ShakeShackBurgerApplication {
 		displayMainMenu();
 	}
 
-	private static void displayMainMenu() {
+	static void displayMainMenu() {
 		System.out.println("SHAKESHACK BURGER 에 오신걸 환영합니다.");
 		System.out.println("아래 메뉴판을 보시고 메뉴를 골라 입력해주세요.\n");
 
@@ -53,6 +53,9 @@ public class ShakeShackBurgerApplication {
 			case 6:
 				handleCancelMenuInput();
 				break;
+			case 0:
+				displayControllerMenu();
+				break;
 			default:
 				System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
 				handleMainMenuInput();
@@ -60,6 +63,141 @@ public class ShakeShackBurgerApplication {
 		}
 	}
 
+	///////////관리자 화면/////////////////////////////////////////
+	private  static void displayControllerMenu() {
+		System.out.println("1. 대기주문 목록");
+		System.out.println("2. 완료주문 목록");
+		System.out.println("3. 상품 생성");
+		System.out.println("4. 상품 삭제");
+		selectControllerMenu();
+	}
+	private static void selectControllerMenu() {
+		Scanner scanner = new Scanner(System.in);
+		int input = scanner.nextInt();
+
+		switch (input) {
+			case 1:
+				//대기주문 목록
+				break;
+			case 2:
+				//완료주문 목록
+				break;
+			case 3:
+				printAddItems();
+				break;
+			case 4:
+				printDeleteItems();
+				break;
+		}
+	}
+	///////////상품 추가 메서드////////////////////////////////////////
+	static void printAddItems() {
+
+		System.out.println("추가하실 상품의 메뉴를 선택해주세요.");
+		List<Menu> showMenus = menuContext.getMenus("Main");
+		printMenu(showMenus, 1);
+
+		addHandleMainMenuInput();
+		System.out.println();
+	}
+
+	static void addHandleMainMenuInput() {
+		Scanner scanner = new Scanner(System.in);
+		int input = scanner.nextInt();
+		switch (input) {
+			case 1:
+				addItems("Burgers");
+				break;
+			case 2:
+				addItems("Frozen Custard");
+				break;
+			case 3:
+				addItems("Drinks");
+				break;
+			case 4:
+				addItems("Beer");
+				break;
+			default:
+				System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
+				addHandleMainMenuInput();
+				break;
+		}
+	}
+
+	static void addItems(String key) {
+
+		List<Item> displayItems = menuContext.getMenuItems(key);
+		 printMenuItems(displayItems);
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("추가하실 상품 이름을 입력해주세요.");
+		String itemName = scanner.nextLine();
+		System.out.println("추가하실 상품의 가격을 입력해주세요.");
+		double itemPrice = scanner.nextDouble();
+		scanner.nextLine();
+		System.out.println("추가하실 상품의 설명을 입력해주세요.");
+		String itemDescription = scanner.nextLine();
+		addMenus(itemName,itemPrice,itemDescription,key);
+		System.out.println("상품이 추가되었습니다.\n");
+
+		displayMainMenu();
+	}
+	public static void addMenus(String name, double price, String description, String key) {
+
+		List<Item> newMenus = menuContext.getMenuItems(key);
+		newMenus.add(new Item(name, price, description));
+		printMenuItems(newMenus);
+	}
+	/////상품 삭제 메서드//////////////////////////////////////////////////
+	private static void printDeleteItems() {
+
+		System.out.println("삭제하실 상품의 메뉴를 선택해주세요.");
+		List<Menu> showMenus = menuContext.getMenus("Main");
+		printMenu(showMenus, 1);
+		deleteHandleMainMenuInput();
+		System.out.println();
+	}
+	static void deleteHandleMainMenuInput() {
+		Scanner scanner = new Scanner(System.in);
+		int input = scanner.nextInt();
+		switch (input) {
+			case 1:
+				deleteItems("Burgers");
+				break;
+			case 2:
+				deleteItems("Frozen Custard");
+				break;
+			case 3:
+				deleteItems("Drinks");
+				break;
+			case 4:
+				deleteItems("Beer");
+				break;
+			default:
+				System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
+				deleteHandleMainMenuInput();
+				break;
+		}
+	}
+	private  static void deleteItems(String key) {
+
+		List<Item> displayItems = menuContext.getMenuItems(key);
+		printMenuItems(displayItems);
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("삭제하실 상품 번호를 입력해주세요.");
+
+		int selectNum = scanner.nextInt();
+		int num = selectNum - 1;
+
+		displayItems.remove(num);
+
+		System.out.println("상품이 삭제되었습니다.\n");
+
+		printMenuItems(displayItems);
+		displayMainMenu();
+	}
+	///////////////////////////////////////////////////////////////
 	private static void displayBurgersMenu() {
 		System.out.println("SHAKESHACK BURGER 에 오신걸 환영합니다.");
 		System.out.println("아래 상품메뉴판을 보시고 상품을 골라 입력해주세요.\n");
